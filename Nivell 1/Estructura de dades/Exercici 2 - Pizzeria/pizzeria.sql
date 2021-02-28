@@ -28,15 +28,30 @@ CREATE TABLE comanda (
   diaTime DATE
 );
 
+CREATE TABLE clienteComanda (
+  idClient INT,
+  idCom INT,
+  CONSTRAINT PRIMARY KEY (idClient, idCom),
+  CONSTRAINT FK_idClient FOREIGN KEY (idClient)
+  REFERENCES cliente(idClient),
+  CONSTRAINT FK_idCom FOREIGN KEY (idCom)
+  REFERENCES comanda(idCom)
+
+);
+
+
+CREATE TABLE categoria (
+  idCatg INT NOT NULL PRIMARY KEY,
+  nomCateg VARCHAR(25)
+);
+
 CREATE TABLE producto (
   idProduct INT NOT NULL PRIMARY KEY,
   nom VARCHAR(25),
   preuProduct DECIMAL(10,2),
-  tipus VARCHAR(25),
-  idCateg INT,
-  nomCateg VARCHAR(25),
-  hamburguesa VARCHAR(25),
-  beguda VARCHAR(25)
+  idCatg INT,
+  CONSTRAINT FK_idCatg FOREIGN KEY (idCatg)
+  REFERENCES categoria(idCatg)
 );
 
 CREATE TABLE comndaXproduc (
@@ -99,10 +114,6 @@ ADD CONSTRAINT idEmp_fk FOREIGN KEY (idEmp)
 REFERENCES empleat(idEmp)
 ON UPDATE CASCADE ON DELETE CASCADE;
 
-ALTER TABLE cliente
-ADD CONSTRAINT idCom_clie_fk FOREIGN KEY (idCom)
-REFERENCES comanda(idCom)
-ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 INSERT INTO comanda VALUES(001, '2021-02-10');
@@ -125,14 +136,19 @@ INSERT INTO provincia(idProv, nom, idLoca) VALUES('GIR', 'Girona', 'ARN');
 INSERT INTO provincia(idProv, nom, idLoca) VALUES('LLEI', 'Lleida', 'CUG');
 INSERT INTO provincia(idProv, nom, idLoca) VALUES('TARR', 'Tarragona', 'SANTA');
 
-INSERT INTO producto(idProduct, nom, preuProduct, tipus, idCateg, nomCateg)
-VALUES (123, 'Pizza Carbonara', 10.50, 'Pizza', 11, 'Pizza Blanca');
-INSERT INTO producto(idProduct, nom, preuProduct, tipus, idCateg, nomCateg)
-VALUES (124, 'Pizza 4 Quesos', 12.50, 'Pizza', 12, 'Pizza Vegetariana');
-INSERT INTO producto(idProduct, nom, preuProduct, tipus, idCateg, nomCateg)
-VALUES (125, 'Pizza Peperoni', 11.50, 'Pizza', 13, 'Pizza Tradicional');
-INSERT INTO producto(idProduct, nom, preuProduct, tipus, idCateg, nomCateg)
-VALUES (126, 'Pizza Veggie', 10.50, 'Pizza', 12, 'Pizza Vegetariana');
+INSERT INTO categoria VALUES (11, 'Pizza Blanca');
+INSERT INTO categoria VALUES (12, 'Pizza Vegetariana');
+INSERT INTO categoria VALUES (13, 'Hambuerguesa');
+INSERT INTO categoria VALUES (14, 'Beguda');
+INSERT INTO categoria VALUES (15, 'Tradicional');
+
+INSERT INTO producto(idProduct, nom, preuProduct, idCatg) VALUES (123, 'Pizza Carbonara', 10.50,15);
+INSERT INTO producto(idProduct, nom, preuProduct, idCatg) VALUES (124, 'Pizza 4 Quesos', 12.50, 12);
+INSERT INTO producto(idProduct, nom, preuProduct, idCatg) VALUES (125, 'Pizza Peperoni', 11.50, 15);
+INSERT INTO producto(idProduct, nom, preuProduct, idCatg) VALUES (126, 'Pizza Veggie', 10.50, 12);
+INSERT INTO producto(idProduct, nom, preuProduct, idCatg) VALUES (127, 'Cocacola', 3, 15);
+INSERT INTO producto(idProduct, nom, preuProduct, idCatg) VALUES (128, 'Americana', 10.50, 12);
+
 
 INSERT INTO empleat VALUES (51,'Josep', 'Maria', '4567890M', 682222233, 'Cuiner');
 INSERT INTO empleat VALUES (52,'Jordi', 'Calvo', '4567890W', 683332233, 'Rider');
@@ -148,3 +164,9 @@ INSERT INTO comndaXproduc VALUES (001, 123, 'Recollir', 2, 25.50, '2021-01-18 13
 INSERT INTO comndaXproduc VALUES (002, 124, 'Delivery', 2, 15.50, '2021-01-06 17:17:17');
 INSERT INTO comndaXproduc VALUES (003, 125, 'Delivery', 3, 35.50, '2021-01-18 12:17:17');
 INSERT INTO comndaXproduc VALUES (001, 126, 'Recollir', 1, 5.50, '2021-01-18 21:17:17');
+
+INSERT INTO clienteComanda VALUES (111, 001);
+INSERT INTO clienteComanda VALUES (222, 002);
+INSERT INTO clienteComanda VALUES (333, 003);
+INSERT INTO clienteComanda VALUES (111, 004);
+INSERT INTO clienteComanda VALUES (444, 001);

@@ -1,4 +1,5 @@
-CREATE DATABASE optica;
+
+CREATE DATABASE IF NOT EXISTS optica;
 USE optica;
 
 CREATE TABLE proveidor (
@@ -6,17 +7,12 @@ CREATE TABLE proveidor (
     nom VARCHAR(15),
     address VARCHAR(15),
     fax INT,
-    telf INT,
-    ulleres_cod VARCHAR(15)
+    telf INT
 );
 
-CREATE TABLE ulleres (
-	  cod VARCHAR(15) NOT NULL PRIMARY KEY,
-    marca VARCHAR(10),
-    graduacio DECIMAL(10,2),
-    colorVidre VARCHAR(10),
-    colorMunt VARCHAR(10),
-    typeMunt VARCHAR(10)
+CREATE TABLE marca (
+	  codMarca VARCHAR(15) NOT NULL PRIMARY KEY,
+    nombreMarca VARCHAR(20)
 );
 
 CREATE TABLE cliente (
@@ -28,39 +24,58 @@ CREATE TABLE cliente (
     dateReg DATE
 );
 
-CREATE TABLE compra (
-	  cod VARCHAR(15) NOT NULL,
-    codiClient VARCHAR(15) NOT NULL,
-	  empVenda VARCHAR(15),
-    clientRef VARCHAR(15),
-    CONSTRAINT PK_clientProduct PRIMARY KEY (cod,codiClient),
-    CONSTRAINT FK_compUlleres FOREIGN KEY (cod)
-    REFERENCES ulleres(cod),
-    CONSTRAINT FK_compClie FOREIGN KEY (codiClient)
-    REFERENCES cliente(codiClient)
+CREATE TABLE empleado (
+	codEmp VARCHAR(15) NOT NULL PRIMARY KEY,
+	nombre VARCHAR(50)
 );
 
-ALTER TABLE proveidor ADD CONSTRAINT ulleres_cod_FK FOREIGN KEY (ulleres_cod) REFERENCES ulleres(cod);
+CREATE TABLE compra (
+	factura VARCHAR(15) PRIMARY KEY,
+    codiClient VARCHAR(15),
+    codEmp VARCHAR(15),
+    CONSTRAINT FK_codiClient FOREIGN KEY (codiClient)
+    REFERENCES cliente(codiClient),
+    CONSTRAINT FK_codEmp FOREIGN KEY (codEmp)
+    REFERENCES empleado(codEmp)
+);
 
-INSERT INTO ulleres VALUES('123A', 'Rayban', 2.3, 'blue','brown', 'mount');
-INSERT INTO ulleres VALUES('123B', 'Gucci', 0.3, 'brown','red', 'put');
-INSERT INTO ulleres VALUES('123C', 'Armani', 7.3, 'black','brown', 'stone');
-INSERT INTO ulleres VALUES('123D', 'Diesel', 1, 'turq','brown', 'flex');
+CREATE TABLE ulleres (
+	cod VARCHAR(15) NOT NULL PRIMARY KEY,
+    codMarca VARCHAR(15),
+    graduacio DECIMAL(10,2),
+    colorVidre VARCHAR(10),
+    colorMunt VARCHAR(10),
+    typeMunt VARCHAR(10),
+    nifProve VARCHAR (15),
+    compraUlleres VARCHAR(15),
+    CONSTRAINT FK_nifProve FOREIGN KEY (nifProve)
+    REFERENCES proveidor(nif),
+    CONSTRAINT FK_codMarca FOREIGN KEY (codMarca)
+    REFERENCES marca(codMarca),
+    CONSTRAINT FK_compraUlleres FOREIGN KEY (compraUlleres)
+    REFERENCES compra(factura)
+);
 
+INSERT INTO proveidor (nif, nom, address, fax, telf)VALUES('1234567', 'Juan', 'C/Urgell 12', 123456, 938765432);
+INSERT INTO proveidor (nif, nom, address, fax, telf)VALUES('1234568', 'Sara', 'C/Aribau 15', 923456, 938765420);
+INSERT INTO proveidor (nif, nom, address, fax, telf)VALUES('1234569', 'Toni', 'C/Balmes 120', 723456, 938765430);
+INSERT INTO proveidor (nif, nom, address, fax, telf)VALUES('1234570', 'Manuel', 'C/Sants 212', 523456, 93876540);
 
-INSERT INTO proveidor (nif, nom, address, fax, telf, ulleres_cod)VALUES('1234567', 'Juan', 'C/Urgell 12', 123456, 938765432,'123A');
-INSERT INTO proveidor (nif, nom, address, fax, telf, ulleres_cod)VALUES('1234568', 'Sara', 'C/Aribau 15', 923456, 938765420,'123B');
-INSERT INTO proveidor (nif, nom, address, fax, telf, ulleres_cod)VALUES('1234569', 'Toni', 'C/Balmes 120', 723456, 938765430,'123C');
-INSERT INTO proveidor (nif, nom, address, fax, telf, ulleres_cod)VALUES('1234570', 'Manuel', 'C/Sants 212', 523456, 93876540,'123D');
-
+INSERT INTO marca VALUES('DIS23', 'Diesel');
+INSERT INTO marca VALUES('RAY100', 'Rayban');
 
 INSERT INTO cliente VALUES('NE1', 'Neus', 689483232, 'nunu1234@goomail.com', '08004', '2020-02-08');
 INSERT INTO cliente VALUES('JUA2', 'Juanan', 689483232, 'Juanan12@goomail.com', '08004', '2020-12-28');
-INSERT INTO cliente VALUES('SARAI1', 'Sarai', 689483232, 'sarai1@goomail.com', '08004', '2021-01-10');
-INSERT INTO cliente VALUES('JOSE2', 'Jose', 689483232, 'jose@goomail.com', '08004', '2019-02-09');
 
+INSERT INTO empleado VALUES('EMP1', 'Jose');
+INSERT INTO empleado VALUES('EMP2', 'Marta');
 
-INSERT INTO compra VALUES('123A','NE1', 'Empleado 34', '3456Ref');
-INSERT INTO compra VALUES('123B','JUA2', 'Empleado 34', '456Ref');
-INSERT INTO compra VALUES('123C','JUA2', 'Empleado 2', '34Ref');
-INSERT INTO compra VALUES('123D','NE1', 'Empleado 4', '5600Ref');
+INSERT INTO compra VALUES('123A', 'NE1', 'EMP1');
+INSERT INTO compra VALUES('123B','JUA2', 'EMP1');
+INSERT INTO compra VALUES('123C','JUA2', 'EMP2');
+INSERT INTO compra VALUES('123D','NE1', 'EMP2');
+
+INSERT INTO ulleres VALUES('123A', 'DIS23', 2.3, 'blue','brown', 'mount','1234567', '123A');
+INSERT INTO ulleres VALUES('123B', 'DIS23', 0.3, 'brown','red', 'put', '1234568','123B');
+INSERT INTO ulleres VALUES('123C', 'RAY100', 7.3, 'black','brown', 'felx','1234568', '123C');
+INSERT INTO ulleres VALUES('123D', 'RAY100', 1, 'turq','brown', 'flex','1234570', '123D');
