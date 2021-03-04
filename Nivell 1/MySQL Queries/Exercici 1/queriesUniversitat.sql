@@ -75,6 +75,7 @@ SELECT p.id_profesor FROM asignatura a RIGHT JOIN profesor p ON a.id_profesor = 
 --5.
 SELECT a.nombre FROM asignatura a LEFT JOIN profesor p ON a.id_profesor = p.id_profesor WHERE a.id_profesor IS NULL;
 --6.
+SELECT  d.nombre AS DepartNom FROM departamento d LEFT JOIN profesor p ON d.id = p.id_profesor JOIN  asignatura a ON p.id_profesor = a.id  ORDER BY d.nombre DESC;
 
 -- Consultes resum Universitat
 
@@ -85,8 +86,8 @@ SELECT count(*) FROM persona WHERE tipo = 'alumno' AND fecha_nacimiento BETWEEN 
 --3.
 SELECT d.nombre, count(*) AS total FROM profesor p JOIN departamento d WHERE d.id = p.id_departamento GROUP BY id_departamento ORDER BY total DESC;
 --4.
-SELECT d.nombre, count(*) AS total FROM profesor p RIGHT JOIN departamento d ON d.id = p.id_departamento GROUP BY id_departamento;
+SELECT d.nombre, count(p.nombre) AS Total FROM persona p JOIN profesor pro ON p.id = pro.id_profesor RIGHT JOIN departamento d ON pro.id_departamento = d.id GROUP BY d.nombre ORDER BY count(p.nombre) DESC;
 --5.
-SELECT g.nombre, count(*) AS Total FROM grado g LEFT JOIN asignatura a ON g.id = a.id_grado GROUP BY a.id_grado ORDER BY a.id_grado DESC;
+SELECT g.nombre AS Grado, count(a.id) AS TotalAsig FROM asignatura a RIGHT JOIN grado g ON g.id = a.id_grado GROUP BY g.nombre ORDER BY a.id_grado DESC;
 --6.
-SELECT g.nombre, count(*) AS Total FROM grado g LEFT JOIN asignatura a ON g.id = a.id_grado GROUP BY a.id_grado HAVING Total > 40;
+SELECT g.nombre AS Grado, count(a.id) AS TotalAsig FROM asignatura a RIGHT JOIN grado g ON g.id = a.id_grado GROUP BY g.nombre HAVING TotalAsig > 40;
