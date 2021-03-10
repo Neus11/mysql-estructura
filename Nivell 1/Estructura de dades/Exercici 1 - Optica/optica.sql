@@ -54,14 +54,16 @@ CREATE TABLE ulleres (
 );
 
 CREATE TABLE transaccion (
-	  factura VARCHAR(15) NOT NULL PRIMARY KEY,
+  	transaccion_id INT PRIMARY KEY,
+	  factura VARCHAR(15),
     cod VARCHAR(15),
+    quantity INT,
+    price FLOAT,
     CONSTRAINT FK_factura FOREIGN KEY (factura)
     REFERENCES compra(factura),
     CONSTRAINT FK_cod FOREIGN KEY (cod)
     REFERENCES ulleres(cod)
 );
-
 
 INSERT INTO proveidor (codProveidor, nif, nom, address, fax, telf)VALUES('porv 123','1234567', 'Juan', 'C/Urgell 12', 123456, 938765432);
 INSERT INTO proveidor (codProveidor, nif, nom, address, fax, telf)VALUES('porv 124','1234568', 'Sara', 'C/Aribau 15', 923456, 938765420);
@@ -87,7 +89,7 @@ INSERT INTO ulleres VALUES('123B', 'DIS23', 0.3, 'brown','red', 'put');
 INSERT INTO ulleres VALUES('123C', 'RAY100', 7.3, 'black','brown', 'felx');
 INSERT INTO ulleres VALUES('123D', 'RAY100', 1, 'turq','brown', 'flex');
 
-INSERT INTO transaccion VALUES('FAC123A','123A');
-INSERT INTO transaccion VALUES('FAC123B','123A');
-INSERT INTO transaccion VALUES('FAC123C','123B');
-INSERT INTO transaccion VALUES('FAC123D','123C');
+INSERT INTO transaccion VALUES(1,'FAC123A','123A', 1, 99);
+INSERT INTO transaccion VALUES(2,'FAC123B','123A', 1, 50);
+INSERT INTO transaccion VALUES(3,'FAC123C','123B', 3, 170);
+INSERT INTO transaccion VALUES(4,'FAC123D','123C', 4, 300);
